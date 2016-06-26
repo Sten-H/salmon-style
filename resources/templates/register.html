@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-block">
+        <h4 class="card-title">Register</h4>
+
+        <form method="POST" action="/register" id="register-form">
+            {% csrf-field %}
+
+            <label>Name*</label>
+            <input type="text" class="form-control" name="name" placeholder="name" />
+
+            <label>Password*</label>
+            <input type="password" class="form-control" name="password" placeholder="password" />
+
+            <label>e-mail:</label>
+            <input type="text" class="form-control" name="email" placeholder="email" />
+
+            <p></p><input type="submit" class="btn btn-primary btn-block" value="register"/></p>
+        </form>
+    </div>
+</div>
+{% endblock %}

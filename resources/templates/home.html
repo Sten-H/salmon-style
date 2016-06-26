@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="jumbotron file-upload">
+        <h1>Salmon-Style</h1>
+        <p>Everyone is telling you to stop salmoning, you know they're right but you just can't stop. Salmon is in your nature, you were born with it. This website was created for people like you.</p>
+        <p>Time to start salmoning all over the place!</p>
+        <p><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#uploadModal">Upload image</button></p>
+    </div>
+
+    <!-- modal is a bootstrap popup window -->
+    <div id="uploadModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Salmon your image</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="POST" action="/upload" enctype="multipart/form-data" id="upload-form">
+                        {% csrf-field %}
+                        <!--
+                        <label>Email to notify:</label>
+                        <input type="text" class="form-control" name="email" placeholder="email" />
+                        <p>File to salmon:</p>
+                        -->
+                        <input type="file" name="file" />
+                        <input type="submit" class="btn btn-primary" value="upload"/>
+                    </form>
+
+                    <!--
+                    <form method="POST" action="/upload">
+                        {% csrf-field %}
+                        <p>
+                            Name:
+                            <input class="form-control"
+                                   type="text"
+                                   name="name"
+                                   value="{{name}}" />
+                        </p>
+                        {% if errors.name %}
+                        <div class="alert alert-danger">{{errors.name|join}}</div>
+                        {% endif %}
+                        <p>
+                            Message:
+                <textarea class="form-control"
+                          rows="4"
+                          cols="50"
+                          name="message">{{message}}</textarea>
+                        </p>
+                        {% if errors.message %}
+                        <div class="alert alert-danger">{{errors.message|join}}</div>
+                        {% endif %}
+                        <input type="submit" class="btn btn-primary" value="comment" />
+                    </form>
+                    -->
+                </div>
+                <div class="modal-footer">
+                    <!-- this doesn't work
+                    <button type="submit" form="upload-form" value="Submit" class="btn btn-primary btn-block" data-dismiss="modal">Upload</button>
+                    -->
+                    <button class="btn btn-primary btn-block" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

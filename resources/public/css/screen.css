@@ -1,0 +1,66 @@
+html,
+body {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height: 100%;
+    /*
+    background-image: url("http://2.bp.blogspot.com/-1ZHuY6GbUzU/Tzht8xpLtuI/AAAAAAAAACI/d_pa9jvyoJA/s1600/salmon+art+5.jpg");
+    background-image: url("/resources/public/img/salmongod.jpg");
+    */
+    background-image: url("http://brendaferrimanidreamart.com/art/wp-content/uploads/photo-gallery/I%20Am%20Salmon.jpg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-attachment: fixed;
+    background-size: cover;
+}
+.navbar {
+  margin-bottom: 10px;
+}
+.navbar-brand {
+  float: none;
+}
+.navbar-nav .nav-item {
+  float: none;
+}
+.navbar-divider,
+.navbar-nav .nav-item+.nav-item,
+.navbar-nav .nav-link + .nav-link {
+  margin-left: 0;
+}
+@media (min-width: 34em) {
+  .navbar-brand {
+    float: left;
+  }
+  .navbar-nav .nav-item {
+    float: left;
+  }
+  .navbar-divider,
+  .navbar-nav .nav-item+.nav-item,
+  .navbar-nav .nav-link + .nav-link {
+    margin-left: 1rem;
+  }
+}
+
+.jumbotron, .navbar, .card {
+    background: rgba(240, 240, 240, 0.8);
+}
+
+.card-header {
+    background: rgba(233, 233, 233, 0.8);
+    color: gray;
+}
+
+.file-upload {
+    text-align: center;
+}
+
+#image-view {
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    max-height 300px;
+}
+
+#original-image {
+  max-width:700px;
+  max-height:500px;
+}
