@@ -12,6 +12,16 @@
                 Dapibus ac facilisis in
                 <span class="label label-danger label-pill pull-xs-right">new</span>
             </a>
+            <a href="#" class="list-group-item disabled">
+                Salmon in progress... Check back later!
+                <span class="label label-info label-pill pull-xs-right">soon</span>
+            </a>
+            {% for image in images %}
+            <a href="/dream/{{image.uri}}" class="list-group-item">
+                {{image.uri}} - {{image.timestamp}}
+                <span class="label label-success label-pill pull-xs-right">new</span>
+            </a>
+            {% endfor %}
         </div>
     </div>
 </div>

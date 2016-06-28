@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+    {% if success %}
+    <div class="alert alert-success fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Success!</strong> {{success}}</div>
+    {% endif %}
     <div class="jumbotron file-upload">
         <h1>Salmon-Style</h1>
         <p>Everyone is telling you to stop salmoning, you know they're right but you just can't stop. Salmon is in your nature, you were born with it. This website was created for people like you.</p>
