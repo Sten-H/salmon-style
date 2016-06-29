@@ -56,7 +56,7 @@
 (defn login-page [request]
   (layout/render "login.html" (get-template-map request)))
 
-(defn user-page [request user]
+(defn inbox-page [request user]
   (layout/render "inbox.html"
                  (merge
                    {:images (user-submitted-images user)}
@@ -73,7 +73,7 @@
 
            (GET "/register" request (register-page request))
 
-           (GET "/inbox/:user" [user] (fn [request] (user-page request user)))
+           (GET "/inbox/:user" [user] (fn [request] (inbox-page request user)))
 
            (GET "/dream/:uri" [uri] (fn [request] (show-image request uri)))
 

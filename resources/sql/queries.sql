@@ -20,7 +20,6 @@ UPDATE images
 SET altered = :altered
 WHERE uri = :uri
 
-
 -- :name get-user-images :? :*
 -- :doc gets all images made by user
 SELECT * FROM images where user = :user

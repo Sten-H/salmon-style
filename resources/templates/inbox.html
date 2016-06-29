@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block page-scripts %}
+    {% script "/js/inbox.js" %}
+{% endblock %}
 {% block content %}
 <div class="card" id="image-view">
     <div class="card-block">
@@ -6,7 +9,7 @@
         <div class="list-group">
             {% for image in images %}
             <a href="{% if image.altered %}/dream/{{image.uri}} {% else %}# {% endif %}"
-               class="list-group-item {% if not image.altered %} disabled {% endif %}">
+               class="list-group-item {% if not image.altered %} disabled {% endif %} inbox-item">
                 <span class="text-muted pull-xs-left inbox-date">{{image.timestamp|date:shortDateTime}}</span>
                 <span class="text-xs-center">{{image.uri}}</span>
                 {% if not image.altered %}
