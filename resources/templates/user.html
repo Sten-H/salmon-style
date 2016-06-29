@@ -1,25 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="card text-xl-center" id="image-view">
+<div class="card" id="image-view">
     <div class="card-block">
         <h4 class="card-title">Salmon Inbox</h4>
         <div class="list-group">
-            <a href="#" class="list-group-item">
-                Dapibus ac facilisis in
-                <span class="label label-danger label-pill pull-xs-right">new</span>
-            </a>
-            <a href="salmon/WhulkMeros" class="list-group-item">
-                Dapibus ac facilisis in
-                <span class="label label-danger label-pill pull-xs-right">new</span>
-            </a>
-            <a href="#" class="list-group-item disabled">
-                Salmon in progress... Check back later!
-                <span class="label label-info label-pill pull-xs-right">soon</span>
-            </a>
             {% for image in images %}
-            <a href="/dream/{{image.uri}}" class="list-group-item">
-                {{image.uri}} - {{image.timestamp}}
-                <span class="label label-success label-pill pull-xs-right">new</span>
+            <a href="/dream/{{image.uri}}" class="list-group-item {% if not image.altered %} disabled {% endif %}"> <!--  include this in class later -->
+                <span class="text-muted pull-xs-left inbox-date">{{image.timestamp|date:shortDateTime}}</span>
+                <span class="text-xs-center">{{image.uri}}</span>
+                {% if not image.altered %}
+                    <span class="label label-info label-pill pull-xs-right">soon</span>
+                {% else %}
+                    {% ifequal image.uploader_viewed "no" %}
+                        <span class="label label-success label-pill pull-xs-right">new</span>
+                    {% endifequal %}
+                {% endif %}
             </a>
             {% endfor %}
         </div>

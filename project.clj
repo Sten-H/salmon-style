@@ -5,6 +5,7 @@
 
   :dependencies [[luminus-log4j "0.1.3"]
                  [org.clojure/clojure "1.8.0"]
+                 [org.clojure/core.async "0.2.385"]
                  [selmer "1.0.6"]
                  [markdown-clj "0.9.89"]
                  [ring-middleware-format "0.7.0"]
@@ -27,7 +28,9 @@
                  [org.xerial/sqlite-jdbc "3.8.11.2"]
                  [org.webjars/webjars-locator-jboss-vfs "0.1.0"]
                  [luminus-immutant "0.2.0"]
-                 [buddy/buddy-hashers "0.14.0"]]
+                 [buddy/buddy-hashers "0.14.0"]
+                 [clj-time "0.12.0"]                        ; For converting sql date time to java.util.Date
+                 ]
 
   :min-lein-version "2.0.0"
 

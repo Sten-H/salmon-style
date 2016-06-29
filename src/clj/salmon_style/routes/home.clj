@@ -8,6 +8,8 @@
             [bouncer.core :as b]
             [bouncer.validators :as v]
             [buddy.hashers :as hashers]
+            [clj-time.coerce :as coerce]
+            [clj-time.format :as date-format]
             ))
 (defn map-keys-to-keywords [m]
   "Takes a map and makes all its keys into keywords (from strings usually).
@@ -24,18 +26,26 @@
     (select-keys request [:flash])))
 
 (defn user-submitted-images [user]
-  "Returns a list (?) of all users submitted images, sorted by latest first"
+  "Returns a list of user's submitted images, sorted by newest first"
   ;fixme the time is in sqlie3 datetime, need to convert it to java date or something?
   ; (reverse (sort-by :time
-  (db/get-user-images {:user user}))
+  (let [image-rows (db/get-user-images {:user user})
+        date-format (date-format/formatter "yyyyMMdd")]
+    (reverse (sort-by :time
+                      (for [image image-rows]
+                        (assoc image :timestamp (coerce/to-date (:timestamp image))))))))
 
-
-
-(defn show-image [uri]
+(defn show-image [request uri]
   "If uri exists in images table of db it is rendered, otherwise 404"
-  (if-let [query-row (db/get-image {:uri uri})]
-    (layout/render "imageview.html" query-row)
-    (layout/render "error.html" {:status "404" :title "Not found title" :message "image not found"})))
+  (let [user (get-in request [:cookies "user" :value])]
+    (if-let [query-row (db/get-image {:uri uri})]
+      (do
+        (spit "crap.txt" user)
+        (if (= user (:user query-row))
+          (db/update-image-viewed! {:uri uri :uploader-viewed "yes"}))
+        (layout/render "imageview.html" (merge
+                                          (get-template-map request) query-row)))
+      (layout/render "error.html" {:status "404" :title "Not found title" :message "image not found"}))))
 
 (defn about-page []
   (layout/render "about.html"))
@@ -65,7 +75,7 @@
 
            (GET "/user/:user" [user] (fn [request] (user-page request user)))
 
-           (GET "/dream/:uri" [uri] (show-image uri))
+           (GET "/dream/:uri" [uri] (fn [request] (show-image request uri)))
 
            ; Serves static images
            (GET "/original/:uri" [uri]

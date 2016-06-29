@@ -4,6 +4,8 @@
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :as response]
             [clojure.java.io :as io]
+            [clojure.core.async :as async
+                      :refer [go thread timeout]]
             ))
 
 (def original-img-folder "upload/original/")
@@ -25,6 +27,12 @@
       (generate-uri)
       uri)))
 
+(defn generate-altered-image-mock-up [uri original-filename]
+  "Simulates an image being processed, updates database entry when done"
+  (Thread/sleep (+ 5000 (rand-int 10000)))
+  ; FIXME it is technically possible that this finishes before the database entry has been made
+  (db/update-image-altered! {:uri uri :altered original-filename}))
+
 (defn upload-image! [img-file user]
   "Saves image to disk and saves img path to database,
   right now it does not save file ending, fix that."
@@ -34,8 +42,8 @@
         original-filename (str uri file-extension)
         ]
     (io/copy tempfile (java.io.File. (str original-img-folder original-filename)))
-    (spit "crap.txt" (java.util.Date.))
-    (db/save-image! {:uri uri :altered "alt", :original original-filename, :user user :timestamp (java.util.Date.)})
+    (async/thread (generate-altered-image-mock-up uri original-filename))
+    (async/thread (db/save-image! {:uri uri, :original original-filename, :altered nil, :user user, :timestamp (java.util.Date.)}))
     (-> (response/found "/")
         (assoc :flash {:success "Image being salmoned. Check your inbox soon!"}))))
 
