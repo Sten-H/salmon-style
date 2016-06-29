@@ -25,7 +25,7 @@
       (generate-uri)
       uri)))
 
-(defn upload-image! [img-file]
+(defn upload-image! [img-file user]
   "Saves image to disk and saves img path to database,
   right now it does not save file ending, fix that."
   (let [{:keys [tempfile filename]} img-file
@@ -35,9 +35,9 @@
         ]
     (io/copy tempfile (java.io.File. (str original-img-folder original-filename)))
     (spit "crap.txt" (java.util.Date.))
-    (db/save-image! {:uri uri :altered "alt", :original original-filename, :user "usr" :timestamp (java.util.Date.)})
+    (db/save-image! {:uri uri :altered "alt", :original original-filename, :user user :timestamp (java.util.Date.)})
     (-> (response/found "/")
         (assoc :flash {:success "Image being salmoned. Check your inbox soon!"}))))
 
 (defroutes upload-routes
-           (POST "/upload" request (upload-image! (get-in request [:params :file]))))
+           (POST "/upload" request (upload-image! (get-in request [:params :file]) (get-in request [:cookies "user" :value]))))

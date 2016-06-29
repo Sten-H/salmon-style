@@ -9,6 +9,27 @@
             [bouncer.validators :as v]
             [buddy.hashers :as hashers]
             ))
+(defn map-keys-to-keywords [m]
+  "Takes a map and makes all its keys into keywords (from strings usually).
+  The cookie from browser has some keys as strings, this fixes it"
+  (into {} (for [[k v] m]
+          [(keyword k) v])))
+
+(defn get-template-map [request]
+  "Creates a map for the Selmer templating tool to use,
+  map is created from the request map. The map consists of :cookies and :flash
+  these values will almost always be needed for templating"
+  (merge
+    (map-keys-to-keywords (select-keys request [:cookies])) ; Get rid of string keys. "user" -> :user
+    (select-keys request [:flash])))
+
+(defn user-submitted-images [user]
+  "Returns a list (?) of all users submitted images, sorted by latest first"
+  ;fixme the time is in sqlie3 datetime, need to convert it to java date or something?
+  ; (reverse (sort-by :time
+  (db/get-user-images {:user user}))
+
+
 
 (defn show-image [uri]
   "If uri exists in images table of db it is rendered, otherwise 404"
@@ -22,18 +43,18 @@
 (defn register-page [{:keys [flash]}]
   (layout/render "register.html" (select-keys flash [:errors])))
 
-(defn login-page [{:keys [flash]}]
-  (layout/render "login.html" (select-keys flash [:success :name :errors])))
+(defn login-page [request]
+  (layout/render "login.html" (get-template-map request)))
 
-(defn user-page [user]
+(defn user-page [request user]
   (layout/render "user.html"
-      {:images (reverse
-                 (sort-by :time
-                          (db/get-user-images {:user "usr"})))}))
+                 (merge
+                   {:images (user-submitted-images user)}
+                   (get-template-map request))))
 
-(defn home-page [{:keys [flash]}]
+(defn home-page [request]
   (layout/render
-    "home.html" (select-keys flash [:success])))
+    "home.html" (get-template-map request)))
 
 (defroutes home-routes
            (GET "/" request (home-page request))
@@ -42,11 +63,12 @@
 
            (GET "/register" request (register-page request))
 
+           (GET "/user/:user" [user] (fn [request] (user-page request user)))
+
            (GET "/dream/:uri" [uri] (show-image uri))
 
-           (GET "/user/:user" [user] (user-page user))
-
+           ; Serves static images
            (GET "/original/:uri" [uri]
-             (file-response (str "upload/original/" uri)))) ; Serves static images
+             (file-response (str "upload/original/" uri))))
 
 

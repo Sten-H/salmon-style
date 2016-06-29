@@ -49,11 +49,18 @@
     (-> (response/found "/login")
         (assoc :flash {:errors errors}))
     (-> (response/found "/")
+        (assoc :cookies {:user name})
         (assoc :flash {:success
                        (str "Welcome back " name "!")}))))
+
+(defn logout-user! [{:keys [cookies]}]
+  (-> (response/found "/")
+      (assoc-in [:cookies "user"] {:value "something " :max-age 0})))
 
 (defroutes auth-routes
            (POST "/login" request (login-user! (:params request)))
 
            (POST "/register" request
-             (register-user! (:params request))))
+             (register-user! (:params request)))
+
+           (GET "/logout" request (logout-user! request)))
