@@ -5,7 +5,8 @@
         <h4 class="card-title">Salmon Inbox</h4>
         <div class="list-group">
             {% for image in images %}
-            <a href="/dream/{{image.uri}}" class="list-group-item {% if not image.altered %} disabled {% endif %}"> <!--  include this in class later -->
+            <a href="{% if image.altered %}/dream/{{image.uri}} {% else %}# {% endif %}"
+               class="list-group-item {% if not image.altered %} disabled {% endif %}">
                 <span class="text-muted pull-xs-left inbox-date">{{image.timestamp|date:shortDateTime}}</span>
                 <span class="text-xs-center">{{image.uri}}</span>
                 {% if not image.altered %}

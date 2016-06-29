@@ -31,8 +31,8 @@
                   </li>
                   {% if cookies.user %}
                       <li class="nav-item">
-                          <a href="{{servlet-context}}/user/{{cookies.user.value}}"
-                             class="nav-link{% ifequal page "user.html" %} active{%endifequal%}">
+                          <a href="{{servlet-context}}/inbox/{{cookies.user.value}}"
+                             class="nav-link{% ifequal page "inbox.html" %} active{%endifequal%}">
                           Inbox
                           </a>
                       </li>
