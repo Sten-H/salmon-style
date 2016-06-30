@@ -16,6 +16,23 @@ To start a web server for the application, run:
 
     lein run
 
+## To do
+### Inbox pill label
+Bootstrap label in inbox navbar link telling how many new items there are.
+### Restructure database
+I feel like I need an inbox table in a way. And maybe a table with a user name tied to an id, faster probably?
+### Encrypt cookie
+The buddy.hashers library doesn't actually have decrypt, only check and encrypt. So easy way of encrypting and
+decrypting cookie doesn't seem possible with this.
+### Send email
+Send email when image is done if user checks it. Checking it does nothing right now.
+### Image upload
+Stop user from uploading non-images, and very large images.
+<timvisher> javax.imageio
+<timvisher> java.awt.image
+<timvisher> hmm… i actually use org.jdesktop.swingx.graphics.GraphicsUtilities/loadCompatibleImage
+<timvisher> i believe mikera has a library force image processing as well
+http://www.joelonsoftware.com/articles/Unicode.html
+http://nedbatchelder.com/text/unipain.html
 ## License
-
 Copyright © 2016 FIXME

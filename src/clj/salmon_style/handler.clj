@@ -4,7 +4,7 @@
             [salmon-style.routes.home :refer [home-routes]]
             [salmon-style.routes.auth-routes :refer [auth-routes]]
             [salmon-style.routes.image-upload :refer [upload-routes]]
-            [salmon-style.routes.api :refer [api-routes]]
+            [salmon-style.routes.inbox :refer [inbox-routes]]
             [compojure.route :as route]
             [salmon-style.env :refer [defaults]]
             [mount.core :as mount]
@@ -25,7 +25,7 @@
     (-> #'upload-routes
         (wrap-routes middleware/wrap-csrf)
         (wrap-routes middleware/wrap-formats))
-    (-> #'api-routes
+    (-> #'inbox-routes
             (wrap-routes middleware/wrap-formats))
     (route/not-found
       (:body

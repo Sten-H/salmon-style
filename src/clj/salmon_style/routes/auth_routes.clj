@@ -9,6 +9,10 @@
             [buddy.hashers :as hashers]
             ))
 
+(defn get-logged-in-user [{:keys [cookies]}]
+  "Gets the user from request map cookie, returns nil if not logged in"
+  (get-in cookies ["user" :value]))
+
 (defn validate-user-login [name password]
   "Returns eventual errors from user's login form, if nil
   is returned the form had no errors."
@@ -55,7 +59,7 @@
 
 (defn logout-user! [{:keys [cookies]}]
   (-> (response/found "/")
-      (assoc-in [:cookies "user"] {:value "something " :max-age 0})))
+      (assoc-in [:cookies "user"] {:value "something" :max-age 0}))) ; can't set value to nil or "" for some reason.
 
 (defroutes auth-routes
            (POST "/login" request (login-user! (:params request)))

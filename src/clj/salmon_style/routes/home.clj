@@ -1,6 +1,7 @@
 (ns salmon-style.routes.home
   (:require [salmon-style.layout :as layout]
             [salmon-style.db.core :as db]
+            [salmon-style.routes.auth-routes :as auth-routes]
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :as response]
             [ring.util.response :refer [file-response]]
@@ -11,6 +12,7 @@
             [clj-time.coerce :as coerce]
             [clj-time.format :as date-format]
             ))
+
 (defn map-keys-to-keywords [m]
   "Takes a map and makes all its keys into keywords (from strings usually).
   The cookie from browser has some keys as strings, this fixes it"
@@ -21,9 +23,13 @@
   "Creates a map for the Selmer templating tool to use,
   map is created from the request map. The map consists of :cookies and :flash
   these values will almost always be needed for templating"
-  (merge
-    (map-keys-to-keywords (select-keys request [:cookies])) ; Get rid of string keys. "user" -> :user
-    (select-keys request [:flash])))
+  (let [template-map (merge
+                       (map-keys-to-keywords (select-keys request [:cookies])) ; Get rid of string keys. "user" -> :user
+                       (select-keys request [:flash]))]
+    (if-let [user (auth-routes/get-logged-in-user request)]
+      (assoc template-map :flash {:new-image-count (db/get-new-images-count {:user user})})
+      template-map)))
+
 
 (defn user-submitted-images [user]
   "Returns a list of user's submitted images, sorted by newest first"
@@ -56,11 +62,13 @@
 (defn login-page [request]
   (layout/render "login.html" (get-template-map request)))
 
-(defn inbox-page [request user]
-  (layout/render "inbox.html"
-                 (merge
-                   {:images (user-submitted-images user)}
-                   (get-template-map request))))
+(defn inbox-page [request]
+  (if-let [user (get-in request [:cookies "user" :value])]  ; FIXME something wrong here
+    (layout/render "inbox.html" (merge
+                                  {:images (user-submitted-images user)}
+                                  (get-template-map request)))
+    (-> (response/found "/login")
+        (assoc :flash {:errors "You need to log in first!"})))) ; FIXME this error does not show, oh wait login doens't have those errors above card fix that
 
 (defn home-page [request]
   (layout/render
@@ -73,7 +81,7 @@
 
            (GET "/register" request (register-page request))
 
-           (GET "/inbox/:user" [user] (fn [request] (inbox-page request user)))
+           (GET "/inbox" request (inbox-page request))
 
            (GET "/dream/:uri" [uri] (fn [request] (show-image request uri)))
 

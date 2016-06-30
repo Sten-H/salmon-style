@@ -5,21 +5,29 @@
 {% block content %}
 <div class="card" id="image-view">
     <div class="card-block">
-        <h4 class="card-title">Salmon Inbox</h4>
+        <h4 class="card-title">{{cookies.user.value|capitalize}}'s Inbox</h4>
         <div class="list-group">
             {% for image in images %}
-            <a href="{% if image.altered %}/dream/{{image.uri}} {% else %}# {% endif %}"
-               class="list-group-item {% if not image.altered %} disabled {% endif %} inbox-item">
+            <!-- the list-group-item-linkable class, makes the entire list-group a link, but still allows
+            for buttons and links inside it -->
+            <div class="list-group-item {% if not image.altered %} disabled {% endif %} list-group-item-linkable"
+                 data-link="{% if image.altered %}/dream/{{image.uri}} {% else %}# {% endif %}">
                 <span class="text-muted pull-xs-left inbox-date">{{image.timestamp|date:shortDateTime}}</span>
                 <span class="text-xs-center">{{image.uri}}</span>
                 {% if not image.altered %}
-                    <span class="label label-info label-pill pull-xs-right">soon</span>
+                    <span class="label label-info label-pill">soon</span>
+                    <i class="fa fa-cog fa-spin fa-2x fa-fw pull-right"></i>
                 {% else %}
                     {% ifequal image.uploader_viewed "no" %}
-                        <span class="label label-success label-pill pull-xs-right">new</span>
+                        <span class="label label-success label-pill">new</span>
                     {% endifequal %}
                 {% endif %}
-            </a>
+                {% if image.altered %}
+                <button class="btn btn-sm pull-right remove-inbox-item" data-uri="{{image.uri}}">
+                    <i class="fa fa-trash-o fa-lg"></i>
+                </button>
+                {% endif %}
+            </div>
             {% endfor %}
         </div>
     </div>

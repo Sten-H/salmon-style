@@ -9,6 +9,11 @@
             ))
 
 (def original-img-folder "upload/original/")
+(def altered-img-folder "altered/original/")
+
+(defn delete-image-from-disk [filename]
+  (future (io/delete-file (str original-img-folder filename)))
+  (future (io/delete-file (str altered-img-folder filename))))
 
 (defn uri-occupied? [uri]
   "Returns true if html is found on url, false if nothing is found."
@@ -17,10 +22,12 @@
        (catch Exception e false)))
 
 (defn generate-uri []
-  "Concatenates two random words of length 5 and tries if url is occupied, then does it again"
-  ;(slurp "http://randomword.setgetgo.com/get.php") gets a random word
-  (let [w1 (future (slurp "http://randomword.setgetgo.com/get.php?len=5"))
-        w2 (future (slurp "http://randomword.setgetgo.com/get.php?len=5"))
+  "Concatenates two random words of total length 10, will redo if uri is occupied."
+  (let [word-total-length 10
+        word1-len (+ 3 (rand-int (/ word-total-length 2)))  ; word1 can be max length (total-length/2) + 2
+        word2-len (- word-total-length word1-len)
+        w1 (future (slurp (str "http://randomword.setgetgo.com/get.php?len=" word1-len)))
+        w2 (future (slurp (str "http://randomword.setgetgo.com/get.php?len=" word2-len)))
         uri (str (clojure.string/capitalize @w1)
                  (clojure.string/capitalize @w2))]
     (if (uri-occupied? uri)

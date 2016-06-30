@@ -41,12 +41,7 @@ body {
 }
 
 .jumbotron, .navbar, .card {
-    background: rgba(240, 240, 240, 0.8);
-}
-
-.card-header {
-    background: rgba(233, 233, 233, 0.8);
-    color: gray;
+    opacity: 0.82;
 }
 
 .file-upload {
@@ -66,5 +61,5 @@ body {
 }
 
 .inbox-date {
-    font-size: xx-small;
+    font-size: small;
 }
