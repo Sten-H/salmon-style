@@ -29,7 +29,7 @@ WHERE uri = :uri AND user = :user
 -- :doc gets all images made by user
 SELECT * FROM images where user = :user
 
--- :name get-new-images-count :? :1
+-- :name get-new-image-count :? :1
 -- :doc returns the number of unviewed images
 SELECT count(*) FROM images WHERE user = :user AND uploader_viewed = "no"
 

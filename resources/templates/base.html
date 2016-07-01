@@ -28,7 +28,7 @@
 									home
 								</a>
 							</li>
-							{% if cookies.user %}
+							{% if session.user %}
 							<li class="nav-item">
 								<a href="{{servlet-context}}/inbox"
 								   class="nav-link{% ifequal page "inbox.html" %} active{%endifequal%}">

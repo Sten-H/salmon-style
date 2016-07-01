@@ -9,9 +9,10 @@
             [buddy.hashers :as hashers]
             ))
 
-(defn get-logged-in-user [{:keys [cookies]}]
-  "Gets the user from request map cookie, returns nil if not logged in"
-  (get-in cookies ["user" :value]))
+(defn get-logged-in-user [{:keys [session]}]
+  "Gets the user from the session in request map. Isolated this to separate function
+  because how this is retrieved can change I think, is very simple now."
+  (:user session))
 
 (defn validate-user-login [name password]
   "Returns eventual errors from user's login form, if nil
@@ -46,23 +47,23 @@
         (-> (response/found "/login")
             (assoc :flash {:success "User registered."}))))))
 
-(defn login-user! [{:keys [name password]}]
+(defn login-user! [{:keys [session params]}]
   "Validates the login information if it contains no
   errors the users should be logged in (user session login not done yet)"
-  (if-let [errors (validate-user-login name password)]
-    (-> (response/found "/login")
-        (assoc :flash {:errors errors}))
-    (-> (response/found "/")
-        (assoc :cookies {:user name})
-        (assoc :flash {:success
-                       (str "Welcome back " name "!")}))))
+  (let [{:keys [name password]} params]
+    (if-let [errors (validate-user-login name password)]
+      (-> (response/found "/login")
+          (assoc :flash {:errors errors}))
+      (-> (response/found "/")
+          (assoc :session {:user name})
+          (assoc :flash {:success (str "Welcome back " name "!")})))))
 
-(defn logout-user! [{:keys [cookies]}]
+(defn logout-user! [{:keys [session]}]
   (-> (response/found "/")
-      (assoc-in [:cookies "user"] {:value "something" :max-age 0}))) ; can't set value to nil or "" for some reason.
+      (assoc :session (dissoc session :user)))) ; can't set value to nil or "" for some reason.
 
 (defroutes auth-routes
-           (POST "/login" request (login-user! (:params request)))
+           (POST "/login" request (login-user! request))
 
            (POST "/register" request
              (register-user! (:params request)))

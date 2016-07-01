@@ -17,13 +17,10 @@ To start a web server for the application, run:
     lein run
 
 ## To do
-### Inbox pill label
-Bootstrap label in inbox navbar link telling how many new items there are.
+### Tests
+yeah.
 ### Restructure database
 I feel like I need an inbox table in a way. And maybe a table with a user name tied to an id, faster probably?
-### Encrypt cookie
-The buddy.hashers library doesn't actually have decrypt, only check and encrypt. So easy way of encrypting and
-decrypting cookie doesn't seem possible with this.
 ### Send email
 Send email when image is done if user checks it. Checking it does nothing right now.
 ### Image upload

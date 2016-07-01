@@ -1,6 +1,7 @@
 (ns salmon-style.routes.image-upload
   (:require [salmon-style.layout :as layout]
             [salmon-style.db.core :as db]
+            [salmon-style.routes.auth-routes :refer [get-logged-in-user]]
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :as response]
             [clojure.java.io :as io]
@@ -40,19 +41,21 @@
   ; FIXME it is technically possible that this finishes before the database entry has been made
   (db/update-image-altered! {:uri uri :altered original-filename}))
 
-(defn upload-image! [img-file user]
+(defn upload-image! [request]
   "Saves image to disk and saves img path to database,
   right now it does not save file ending, fix that."
-  (let [{:keys [tempfile filename]} img-file
+  (let [{:keys [tempfile filename]}
+        (get-in request [:params :file])
         uri (generate-uri)
+        user (future (get-logged-in-user request))
         file-extension (re-find #"\.[a-z]+" filename)
         original-filename (str uri file-extension)
         ]
     (io/copy tempfile (java.io.File. (str original-img-folder original-filename)))
     (async/thread (generate-altered-image-mock-up uri original-filename))
-    (async/thread (db/save-image! {:uri uri, :original original-filename, :altered nil, :user user, :timestamp (java.util.Date.)}))
+    (async/thread (db/save-image! {:uri uri, :original original-filename, :altered nil, :user @user, :timestamp (java.util.Date.)}))
     (-> (response/found "/")
         (assoc :flash {:success "Image being salmoned. Check your inbox soon!"}))))
 
 (defroutes upload-routes
-           (POST "/upload" request (upload-image! (get-in request [:params :file]) (get-in request [:cookies "user" :value]))))
+           (POST "/upload" request (upload-image! request)))
