@@ -23,6 +23,7 @@ yeah.
 I feel like I need an inbox table in a way. And maybe a table with a user name tied to an id, faster probably?
 ### Send email
 Send email when image is done if user checks it. Checking it does nothing right now.
+### Have database sort by date instead of clojure?
 ### Image upload
 Stop user from uploading non-images, and very large images.
 <timvisher> javax.imageio

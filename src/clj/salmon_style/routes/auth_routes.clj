@@ -1,13 +1,10 @@
 (ns salmon-style.routes.auth-routes
-  (:require [salmon-style.layout :as layout]
-            [salmon-style.db.core :as db]
+  (:require [salmon-style.db.core :as db]
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :as response]
-            [clojure.java.io :as io]
             [bouncer.core :as b]
             [bouncer.validators :as v]
-            [buddy.hashers :as hashers]
-            ))
+            [buddy.hashers :as hashers]))
 
 (defn get-logged-in-user [{:keys [session]}]
   "Gets the user from the session in request map. Isolated this to separate function
@@ -43,7 +40,7 @@
       (-> (response/found "/register")
           (assoc :flash {:errors errors}))
       (do
-        (db/register-user! (assoc params :password (hashers/encrypt password)))
+        (db/create-user! (assoc params :password (hashers/encrypt password)))
         (-> (response/found "/login")
             (assoc :flash {:success "User registered."}))))))
 

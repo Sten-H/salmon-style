@@ -1,8 +1,8 @@
--- :name save-image! :! :n
--- :doc save image file paths with unique url as key
+-- :name create-image! :! :n
+-- :doc creates image unique url as key
 INSERT INTO images
-(uri, altered, original, user, timestamp, uploader_viewed)
-VALUES (:uri, :altered, :original, :user, :timestamp, "nil")
+(uri, original, user, timestamp)
+VALUES (:uri, :original, :user, :timestamp)
 
 -- :name get-image :? :1
 -- :doc get the entire row of the image with the queried uri
@@ -33,8 +33,8 @@ SELECT * FROM images where user = :user
 -- :doc returns the number of unviewed images
 SELECT count(*) FROM images WHERE user = :user AND uploader_viewed = "no"
 
--- :name register-user! :! :n
--- :doc registers user
+-- :name create-user! :! :n
+-- :doc creates a user in users table
 INSERT INTO users
 (name, email, password)
 VALUES (:name, :email, :password)

@@ -42,18 +42,16 @@
   (db/update-image-altered! {:uri uri :altered original-filename}))
 
 (defn upload-image! [request]
-  "Saves image to disk and saves img path to database,
-  right now it does not save file ending, fix that."
+  "Saves image to disk and saves img path to database."
   (let [{:keys [tempfile filename]}
         (get-in request [:params :file])
         uri (generate-uri)
         user (future (get-logged-in-user request))
         file-extension (re-find #"\.[a-z]+" filename)
-        original-filename (str uri file-extension)
-        ]
-    (io/copy tempfile (java.io.File. (str original-img-folder original-filename)))
+        original-filename (str uri file-extension)]
+    (async/thread (io/copy tempfile (java.io.File. (str original-img-folder original-filename))))
     (async/thread (generate-altered-image-mock-up uri original-filename))
-    (async/thread (db/save-image! {:uri uri, :original original-filename, :altered nil, :user @user, :timestamp (java.util.Date.)}))
+    (async/thread (db/create-image! {:uri uri, :original original-filename, :altered nil, :user @user, :timestamp (java.util.Date.)}))
     (-> (response/found "/")
         (assoc :flash {:success "Image being salmoned. Check your inbox soon!"}))))
 

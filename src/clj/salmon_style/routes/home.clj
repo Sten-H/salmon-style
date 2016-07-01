@@ -18,7 +18,7 @@
   map is created from the request map. The map consists of :session and :flash
   these values will almost always be needed for templating"
   (let [template-map (select-keys request [:flash :session])]
-    (if-let [user (auth-routes/get-logged-in-user request)]
+    (if-let [user (get-logged-in-user request)]
       (assoc template-map
         :flash {:new-image-count (db/get-new-image-count {:user user})})
       template-map)))

@@ -1,7 +1,0 @@
-DROP TABLE IF EXISTS images;
---;;
-CREATE TABLE images
-    (uri VARCHAR(15) PRIMARY KEY,
-    altered VARCHAR(50) NOT NULL,
-    original VARCHAR(50) NOT NULL,
-    user INTEGER NOT NULL);

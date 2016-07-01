@@ -4,7 +4,8 @@
             [salmon-style.routes.image-upload :as image-upload]
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :as response]
-            [ring.util.response :refer [file-response]]))
+            [ring.util.response :refer [file-response]]
+            [clj-time.coerce :as coerce]))
 
 (defn inbox-changed? [request]
   ; I think I could do something like this server side with (diff), but maybe it's better
