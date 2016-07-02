@@ -63,3 +63,7 @@ body {
 .inbox-date {
     font-size: small;
 }
+
+#invalid-image-icon, #accepted-image-icon {
+	display: none;
+}

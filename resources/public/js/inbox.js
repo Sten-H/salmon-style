@@ -1,4 +1,4 @@
-var inbox = {};
+var inbox = {}; // namespace
 (function(context) {
 	"use strict";
 	// Function that polls backend to delete image with uri (user has to be logged in as uploader of image)

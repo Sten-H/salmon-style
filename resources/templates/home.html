@@ -14,7 +14,7 @@
     {% endif %}
 </div>
 
-<!-- modal is a bootstrap popup window -->
+<!-- Pop up containing file upload form. modal is a bootstrap popup window -->
 <div id="uploadModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
@@ -40,14 +40,16 @@
                     <div class="form-group row">
                         <label class="col-sm-2">Image</label>
                         <div class="col-sm-10">
-                            <input type="file" name="file" class="btn-primary" title="Search for a file to add"/>
-                        </div>
-                    </div>
+                            <input type="file" id="image-input" name="file" class="btn-primary" title="Search for a file to add">
+							<font color="red"><i id="invalid-image-icon" class="fa fa-times pull-right" aria-hidden="true"></i></font>
+							<font color="green"><i id="accepted-image-icon" class="fa fa-check pull-right" aria-hidden="true"></i></font>
+						</div>
+					</div>
                 </form>
-            </div>
+				<div id="alert-placeholder"></div>
             <div class="modal-footer">
                 <!-- form submit button here -->
-                <button type="submit" form="upload-form" value="upload" class="btn btn-primary btn-block">Upload</button>
+                <button type="submit" form="upload-form" id="upload-button" value="upload" class="btn btn-primary btn-block">Upload</button>
             </div>
         </div>
     </div>
